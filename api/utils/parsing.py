@@ -13,15 +13,11 @@ class Parsing(Session):
         self.history_url = None
 
     def __get_html(self, slug, **kwargs):
-        if slug.startswith("/"):
-            url = f"{self.url}{slug}"
-        else:
-            url = f"{self.url}/{slug}"
+        url = f"{self.url}{slug}" if slug.startswith("/") else f"{self.url}/{slug}"
         print(kwargs)
         r = self.get(url, **kwargs)
         self.history_url = url
-        resp = r.text
-        return resp
+        return r.text
 
     def get_parsed_html(self, url, **kwargs):
         return BeautifulSoup(self.__get_html(url, **kwargs), "html.parser")

@@ -28,22 +28,17 @@ class Episode(Parsing):
         return slug
 
     def __get_thumbnail(self, content):
-        el = content.find("div", {"class": "thumbnail"})
-        if el:
+        if el := content.find("div", {"class": "thumbnail"}):
             img = el.find("img")
-            thumbnail = img.get("data-lazy-src", img.get("src"))
-            return thumbnail
+            return img.get("data-lazy-src", img.get("src"))
         else:
-            el = content.find("div", {"class": "thumb"})
-            if el:
+            if el := content.find("div", {"class": "thumb"}):
                 img = el.find("img")
-                thumbnail = img.get("data-lazy-src", img.get("src"))
-                return thumbnail
+                return img.get("data-lazy-src", img.get("src"))
         return None
 
     def __get_genres(self, content):
-        genres = content.find("div", {"class": "genxed"})
-        if genres:
+        if genres := content.find("div", {"class": "genxed"}):
             genres = genres.find_all("a")
             return list(map(lambda x: x.text, genres))
         return []
@@ -70,10 +65,8 @@ class Episode(Parsing):
         return rating.split(" ")[1]
 
     def __get_sinopsis(self, data):
-        el = data.find("div", {"class": "desc mindes"})
-        if el:
-            sinopsis = el.get_text(strip=True)
-            return sinopsis
+        if el := data.find("div", {"class": "desc mindes"}):
+            return el.get_text(strip=True)
         return None
 
     def __get_episodes(self, data):
@@ -109,8 +102,7 @@ class Episode(Parsing):
         return result
 
     def __get_video(self, data):
-        video = data.find("select", {"class": "mirror"})
-        if video:
+        if video := data.find("select", {"class": "mirror"}):
             video = video.find_all("option")
             video = list(map(lambda x: self.__bs64(x["value"], x.text), video))
             return list(filter(lambda x: x, video))
@@ -119,8 +111,7 @@ class Episode(Parsing):
     def __bs64(self, data, name=""):
         if data:
             decode = b64decode(data).decode("utf-8")
-            content = self.parsing(decode).find("iframe")
-            if content:
+            if content := self.parsing(decode).find("iframe"):
                 return dict(
                     name=name.strip(),
                     url=content["src"],

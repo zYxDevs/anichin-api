@@ -14,12 +14,10 @@ class Video(Parsing):
 
     def get_details(self):
         data = self.get_parsed_html(self.slug)
-        video = self.__get_video(data)
-        return video
+        return self.__get_video(data)
 
     def __get_video(self, data):
-        video = data.find("select", {"class": "mirror"})
-        if video:
+        if video := data.find("select", {"class": "mirror"}):
             video = video.find_all("option")
             video = [i["value"] for i in video if i.text.strip() == "OK.ru"][0]
             decode = b64decode(video).decode("utf-8")
@@ -43,8 +41,9 @@ class Video(Parsing):
     def __update_media_urls(self, results, query_string):
         for media in results["medias"]:
             url_parts = urlparse(media["url"])
-            query = dict(parse_qsl(url_parts.query))
-            query.update(dict(qc.split("=") for qc in query_string.split("&")))
+            query = dict(parse_qsl(url_parts.query)) | (
+                qc.split("=") for qc in query_string.split("&")
+            )
             url_parts = url_parts._replace(query=urlencode(query))
             media["url"] = url_parts.geturl()
         return results

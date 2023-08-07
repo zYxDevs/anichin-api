@@ -45,13 +45,13 @@ def search(req: Request):
     params: q - string (required)
     return: JSON
     """
-    query = req.query_params.get("q")
-    if not query:
+    if query := req.query_params.get("q"):
+        return main.search(query)
+    else:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"error": "Missing query"},
         )
-    return main.search(query)
 
 
 # slug from url
@@ -65,8 +65,7 @@ def get_info(slug: Text):
     """
     try:
         slug = slug
-        data = main.get_info(slug)
-        return data
+        return main.get_info(slug)
     except Exception as err:
         print(err)
         return JSONResponse(
@@ -83,8 +82,7 @@ def list_genres():
 
     """
     try:
-        data = main.genres()
-        return data
+        return main.genres()
     except Exception as err:
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -109,8 +107,7 @@ def get_genres(req: Request, slug: Text):
                 content={"error": "Invalid page"},
             )
 
-        data = main.genres(slug, int(page) if page else 1)
-        return data
+        return main.genres(slug, int(page) if page else 1)
     except Exception as err:
         print(err)
         return JSONResponse(
@@ -128,8 +125,7 @@ def get_episode(slug: Text):
 
     """
     try:
-        data = main.get_episode(slug)
-        if data:
+        if data := main.get_episode(slug):
             return JSONResponse(
                 status_code=status.HTTP_200_OK,
                 content=data,
@@ -156,8 +152,7 @@ def get_video(slug: Text):
 
     """
     try:
-        data = main.get_video_source(slug)
-        if data:
+        if data := main.get_video_source(slug):
             return JSONResponse(
                 status_code=status.HTTP_200_OK,
                 content=data,
@@ -184,8 +179,7 @@ def anime(req: Request):
     try:
         req = req.query_params
         todict = dict(req)
-        data = main.anime(params=todict)
-        return data
+        return main.anime(params=todict)
     except Exception as err:
         print(err)
         return JSONResponse(

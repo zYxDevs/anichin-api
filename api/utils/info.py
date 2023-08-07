@@ -27,8 +27,7 @@ class Info(Parsing):
         return thumbnail
 
     def __get_genres(self, content):
-        genres = content.find("div", {"class": "genxed"})
-        if genres:
+        if genres := content.find("div", {"class": "genxed"}):
             genres = genres.find_all("a")
             return list(map(lambda x: x.text, genres))
         return []
@@ -52,12 +51,10 @@ class Info(Parsing):
 
     def __get_rating(self, content):
         el = content.find("div", {"class": "rating"})
-        rating = el.find("strong")
-        if rating:
+        if rating := el.find("strong"):
             return rating.text.split(" ")[1]
-        else:
-            rating = el.find("div", {"class": "numscore"}).text
-            return rating
+        rating = el.find("div", {"class": "numscore"}).text
+        return rating
 
     def __get_sinopsis(self, data):
         sinopsis = (

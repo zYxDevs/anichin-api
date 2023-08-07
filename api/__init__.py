@@ -31,9 +31,7 @@ class Main:
 
     def genres(self, genre=None, page=1):
         genres = Genres()
-        if not genre:
-            return genres.list_genre()
-        return genres.get_genre(genre, page)
+        return genres.list_genre() if not genre else genres.get_genre(genre, page)
 
     def anime(self, **kwargs):
         return Anime().get_details(**kwargs)
