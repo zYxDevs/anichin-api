@@ -38,6 +38,6 @@ class Anime(Parsing):
         return dict(results=cards, total=len(cards), source=self.history_url)
 
     def get_details(self, **kwargs):
-        url = f"/anime"
+        url = "/anime"
         data = self.get_parsed_html(url, **kwargs)
         return self.__get_home(data)

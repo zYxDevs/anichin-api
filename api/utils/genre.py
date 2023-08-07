@@ -45,7 +45,7 @@ class Genres(Parsing):
         return dict(genres=genres, total=len(genres), source=self.history_url)
 
     def get_genre(self, slug: str, page: int = 1):
-        url = "/anime?genre[]=" + slug
+        url = f"/anime?genre[]={slug}"
         if page > 1:
             url = f"{url}&page={page}"
         data = self.get_parsed_html(url)
